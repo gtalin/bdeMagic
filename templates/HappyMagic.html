@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Happy</title>
+   
+       <script type="text/javascript" src="javascript/jquery-3.1.0.min.js"></script>
+ 
+       <!-- <link rel="stylesheet" href="css/style.css">-->
+       <!--<link rel="stylesheet" type="text/css" href="css/rainingBalls.css" media="screen" />-->
+       <style>
+       /*#wrapper {
+         overflow: scroll;
+       }*/
+       </style>
+       
+    
+  </head>
+
+  <body>
+    <!--
+    <div id="wrapper">
+    <canvas id="canvas" width="500px"></canvas>
+    </div> -->
+    <canvas id="canvas"></canvas>
+      <script>
+      var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+var startX = 50;
+var startY = 50;
+var interval =  150;
+//ctx.fillRect(startX,startY,1,1); // fill in the pixel at (10,10)
+ctx.fillStyle = 'black';
+var points = [];
+var pointsX =[], pointsY =[];
+var message = "HAPPY BIRTHDAY MOM";
+
+
+var x= startX, y = startY;
+for (var i=0; i<message.length; i++) {
+  switch (message[i]) {
+    case 'A':
+      drawA(x, y);
+      break;
+    case 'B':
+      drawB(x,y);
+      break;
+    case 'D':
+      drawD(x,y);
+      break;
+    case 'H':
+      drawH(x,y);
+      break;
+    case 'I':
+      drawI(x,y);
+      break;
+    case 'T':
+      drawT(x,y);
+      break;
+    case 'O':
+      drawO(x,y);
+      break;
+    case 'M':
+      drawM(x,y);
+      break;
+    case 'Y':
+      drawY(x,y);
+      break;
+    case 'P':
+      drawP(x,y);
+      break;
+    case 'R':
+      drawR(x,y);
+      break;
+    case ' ':
+      y = y + 200;
+      x = startX-100;
+      break;
+  }
+   x = x + interval;
+}
+
+points2xy();
+
+document.onmousemove = handleMouseMove;
+document.touchstart = handleTouch;
+//drawVertical(startX, startY);
+//drawHorizontal(startX, startY);
+//drawDiagonal(startX, startY);
+/*
+drawA(startX, startY);
+drawB(startX+interval, startY);
+drawD(startX+interval*2, startY);
+drawH(startX+interval*3, startY);
+drawI(startX+interval*4, startY);
+drawT(startX+interval*5, startY);
+drawO(startX+interval*6, startY);
+drawM(startX+interval*7, startY);
+drawY(startX+interval*8, startY);
+drawP(startX+interval*9, startY);
+drawR(startX+interval*10, startY);
+*/
+
+//console.log(points.length);
+//console.log(pointsX, pointsY);
+
+function handleMouseMove (event) {
+  var x,y;
+  x = event.pageX; y = event.pageY;
+  //console.log(x,y);
+  //var point = {x:x,y:y};
+  //var present = objinArray2(x,y);
+  var present = objinArray({x:x,y:y});
+  console.log(present);
+  //var inArray = points.indexOf(point);
+  if (present === true) {
+    new Particle(x,y);
+  }
+}
+
+function handleTouch (event) {
+  var x,y;
+  var touches = event.changedTouches;
+  for (var i=0; i <touches.length; i++) {
+    ctx.beginPath();
+    ctx.arc(touches[i].pageX, touches[i].pageY, 4, 0, 2 * Math.PI, false);  // a circle at the start
+    ctx.fillStyle = 'black';
+    ctx.fill();
+  }
+  //x = event.pageX; y = event.pageY;
+  //console.log(x,y);
+  //var point = {x:x,y:y};
+  //var present = objinArray2(x,y);
+  var present = objinArray({x:x,y:y});
+  console.log(present);
+  //var inArray = points.indexOf(point);
+  if (present === true) {
+    new Particle(x,y);
+  }
+}
+
+function Particle(x,y) {
+  this.x = x;
+  this.y = y;
+  this.size = genRandomNumber(3,8);
+  this.color = randomColor();
+  this.drawParticle = function() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+    ctx.fillStyle = this.color;
+    ctx.closePath();
+    ctx.fill();
+  }
+  this.drawParticle();
+}
+
+function drawVertical(startX, startY, points2Draw) {
+  var point;
+  for (var i=0;i<points2Draw;i++) {
+    point = {x:startX,y:startY+i*20};
+    points.push(point);
+    //ctx.fillRect(startX,startY+(i*20),1,1);
+    ctx.fillStyle = 'black';
+  }
+  return startY+(3*20);
+}
+
+function drawHorizontal(startX, startY) {
+  var point;
+  for (var i=0;i<5;i++) {
+    startX = startX + 15;
+    point = {x:startX, y:startY};
+    points.push(point);
+    //ctx.fillRect(startX,startY,1,1);
+    ctx.fillStyle = 'black';
+  }
+  return startX;
+}
+
+function drawDiagonal(startX, startY,points2Draw) {
+  var point;
+  for (var i=0;i<points2Draw;i++) {
+    point= {x:startX+i*10, y:startY+i*10};
+    points.push(point);
+    //ctx.fillRect(startX+(i*10),startY+(i*10),1,1);
+    ctx.fillStyle = 'black';
+  }
+  return {x:startX+4*10, y:startY+4*10};
+}
+
+function drawDiagonalMirror(startX, startY) {
+  //console.log(startX, startY);
+  var point;
+  for (var i=0;i<5;i++) {
+    point = {x:startX+i*10, y:startY-i*10};
+    points.push(point);
+    //ctx.fillRect(startX+(i*10),startY-(i*10),1,1);
+    ctx.fillStyle = 'black';
+  }
+  return {x:startX+4*10, y:startY-4*10};
+}
+
+function drawA(x, y) {
+  var newY = drawVertical(x, y, 7);
+  var newX = drawHorizontal(x, y);
+  drawVertical(newX, y, 7);
+  drawHorizontal(x, newY);
+}
+
+function drawB(x, y) {
+  var newY = drawVertical(x, y, 7);
+  var newX = drawHorizontal(x, y);
+  drawVertical(newX, y, 7);
+  drawHorizontal(x, newY);
+  newY = newY + 3*20;
+  drawHorizontal(x, newY);
+}
+
+function drawD(x,y) {
+  drawVertical(x,y,7);
+  var newX = drawHorizontal(x,y);
+  drawVertical(newX, y, 7);
+  var newY = y + 6*20;
+  drawHorizontal(x, newY);
+  
+}
+
+function drawH(x,y) {
+  var newY = drawVertical(x,y, 7);
+  var newX = drawHorizontal(x,newY);
+  drawVertical(newX, y, 7);
+}
+
+function drawI(x,y) {
+  drawHorizontal(x,y);
+  var newX = x + 3*15;
+  drawVertical(newX,y, 7);
+  var newY = y +6*20;
+  var newX = drawHorizontal(x,newY);
+}
+
+function drawT(x,y) {
+  drawHorizontal(x,y);
+  var newX = x + 3*15;
+  drawVertical(newX,y,7);
+}
+
+function drawO(x,y) {
+  drawVertical(x,y, 7);
+  var newX = drawHorizontal(x,y);
+  drawVertical(newX, y, 7);
+  var newY = y + 6*20;
+  drawHorizontal(x, newY);
+}
+
+function drawM(x,y) {
+  drawVertical(x,y,7);
+  var point1 = drawDiagonal(x,y,5);
+  //console.log(point);
+  var point2 = drawDiagonalMirror(point1.x, point1.y);
+  drawVertical(point2.x,point2.y, 7);
+}
+
+function drawY(x,y) {
+  var point1 = drawDiagonal(x,y,5);
+  var point2 = drawDiagonalMirror(point1.x, point1.y);
+  drawVertical(point1.x, point1.y, 5);
+}
+
+function drawP(x,y) {
+  drawVertical(x,y,7);
+  var newX = drawHorizontal(x,y);
+  var newY = y + 3*20;
+  drawHorizontal(x, newY);
+  drawVertical(newX, y, 4);
+}
+
+function drawR(x,y) {
+  drawVertical(x,y,7);
+  var newX = drawHorizontal(x,y);
+  var newY = y + 3*20;
+  drawHorizontal(x, newY);
+  drawVertical(newX, y, 4);
+  drawDiagonal(x,newY,7);
+}
+
+function objinArray(obj) {
+  console.log(obj.x, obj.y);
+  var dist;
+  for (i=0;i<points.length;i++) {
+    dist = distancePoints(obj,points[i]);
+    if (dist<5)
+      return true;
+  }
+  return false;
+}
+
+function distancePoints(point1,point2) {
+  return Math.sqrt(Math.pow((point1.x-point2.x),2) + Math.pow((point1.y-point2.y),2));
+}
+
+function objinArray2(x,y) {
+  var ix = pointsX.indexOf(x);
+  console.log(ix);
+  if (ix !== -1) {
+    console.log("well");
+    if (pointsY[ix] === y){
+      return true;}
+    else
+    {return false;}
+  }
+  else
+    return false;
+}
+
+function points2xy() {
+  //dividing x and y so that we can use indexOf
+  for (var i=0;i<points.length;i++) {
+    pointsX[i] = points[i].x;
+    pointsY.push(points[i].y);
+  }
+}
+
+function randomColor() {
+  var color = "#";
+  var randomNumber;
+  var colorAlphabets = "0123456789ABCDEF".split('');
+  for (var i=0;i<6;i++) {
+    randomNumber = genRandomNumber(0,15);
+    color = color + colorAlphabets[randomNumber];
+  }
+  return color;
+}
+
+function genRandomNumber(min, max) {
+  return Math.floor(Math.random() * (max-min+1) + min);
+}
+      </script>
+  </body>
+</html>
